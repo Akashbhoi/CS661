@@ -25,7 +25,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_5253cf9aac0c177bb0722eea48a5e12f {
+                #map_ce1a24636de451a7e53bd564511ec685 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -35,18 +35,19 @@
                 .leaflet-container { font-size: 1rem; }
             </style>
         
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-ant-path@1.1.2/dist/leaflet-ant-path.min.js"></script>
 </head>
 <body>
     
     
-            <div class="folium-map" id="map_5253cf9aac0c177bb0722eea48a5e12f" ></div>
+            <div class="folium-map" id="map_ce1a24636de451a7e53bd564511ec685" ></div>
         
 </body>
 <script>
     
     
-            var map_5253cf9aac0c177bb0722eea48a5e12f = L.map(
-                "map_5253cf9aac0c177bb0722eea48a5e12f",
+            var map_ce1a24636de451a7e53bd564511ec685 = L.map(
+                "map_ce1a24636de451a7e53bd564511ec685",
                 {
                     center: [37.0902, -95.7129],
                     crs: L.CRS.EPSG3857,
@@ -60,52 +61,66 @@
 
         
     
-            var tile_layer_56e702ba60b239a4c56f9a2a8bb2199e = L.tileLayer(
+            var tile_layer_adc76e0204fa66499378d3861e9c4656 = L.tileLayer(
                 "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {"attribution": "Data by \u0026copy; \u003ca target=\"_blank\" href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
-            ).addTo(map_5253cf9aac0c177bb0722eea48a5e12f);
+            ).addTo(map_ce1a24636de451a7e53bd564511ec685);
         
     
-            var marker_5a75d65084fd2fb1d2e0bc45daa80d49 = L.marker(
-                [40.4556825, -109.528474],
+            var marker_b205adb13070e0476aa2e1f6567066f7 = L.marker(
+                [39.7392364, -104.984862],
                 {}
-            ).addTo(map_5253cf9aac0c177bb0722eea48a5e12f);
+            ).addTo(map_ce1a24636de451a7e53bd564511ec685);
         
     
-        var popup_8fda16ee401a0fa6c546d8b74fd40fc1 = L.popup({"maxWidth": "100%"});
+        var popup_a2285a8494ed087f6d3fd197881eb0cc = L.popup({"maxWidth": "100%"});
 
         
             
-                var html_d610d8567e1c9a39017be3fcc7615578 = $(`<div id="html_d610d8567e1c9a39017be3fcc7615578" style="width: 100.0%; height: 100.0%;">Vernal</div>`)[0];
-                popup_8fda16ee401a0fa6c546d8b74fd40fc1.setContent(html_d610d8567e1c9a39017be3fcc7615578);
+                var html_a7975a0342f0cbf40db24445bcd28b82 = $(`<div id="html_a7975a0342f0cbf40db24445bcd28b82" style="width: 100.0%; height: 100.0%;">Denver</div>`)[0];
+                popup_a2285a8494ed087f6d3fd197881eb0cc.setContent(html_a7975a0342f0cbf40db24445bcd28b82);
             
         
 
-        marker_5a75d65084fd2fb1d2e0bc45daa80d49.bindPopup(popup_8fda16ee401a0fa6c546d8b74fd40fc1)
+        marker_b205adb13070e0476aa2e1f6567066f7.bindPopup(popup_a2285a8494ed087f6d3fd197881eb0cc)
         ;
 
         
     
     
-            var marker_9f2eaa028d15f0b5f2ff1d519da250a1 = L.marker(
-                [61.2163129, -149.894852],
+            var marker_ba6bc7243c0782746d89aef64c9d1f3c = L.marker(
+                [52.4796992, -1.9026911],
                 {}
-            ).addTo(map_5253cf9aac0c177bb0722eea48a5e12f);
+            ).addTo(map_ce1a24636de451a7e53bd564511ec685);
         
     
-        var popup_3bf26dbf0f0a57e1ae4b6fabdf81c20a = L.popup({"maxWidth": "100%"});
+        var popup_71f0c2286882a8d6b448da250ff35bc5 = L.popup({"maxWidth": "100%"});
 
         
             
-                var html_68b3867e4c9a0b7b9d39190d5f47eb22 = $(`<div id="html_68b3867e4c9a0b7b9d39190d5f47eb22" style="width: 100.0%; height: 100.0%;">Anchorage</div>`)[0];
-                popup_3bf26dbf0f0a57e1ae4b6fabdf81c20a.setContent(html_68b3867e4c9a0b7b9d39190d5f47eb22);
+                var html_fa035984501cc9632e7dc69e7f6dda86 = $(`<div id="html_fa035984501cc9632e7dc69e7f6dda86" style="width: 100.0%; height: 100.0%;">Birmingham</div>`)[0];
+                popup_71f0c2286882a8d6b448da250ff35bc5.setContent(html_fa035984501cc9632e7dc69e7f6dda86);
             
         
 
-        marker_9f2eaa028d15f0b5f2ff1d519da250a1.bindPopup(popup_3bf26dbf0f0a57e1ae4b6fabdf81c20a)
+        marker_ba6bc7243c0782746d89aef64c9d1f3c.bindPopup(popup_71f0c2286882a8d6b448da250ff35bc5)
         ;
 
         
     
+    
+            ant_path_e31c9f89e83a91fd27e3a06b17dc39a1 = L.polyline.antPath(
+              [[39.7392364, -104.984862], [52.4796992, -1.9026911]],
+              {"bubblingMouseEvents": true, "color": "#8E44AD", "dashArray": [50, 30], "dashOffset": null, "delay": 800, "fill": false, "fillColor": "#8E44AD", "fillOpacity": 0.2, "fillRule": "evenodd", "hardwareAcceleration": false, "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.5, "paused": false, "pulseColor": "#FFC300", "reverse": false, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+        ).addTo(map_ce1a24636de451a7e53bd564511ec685);
+        
+    
+            ant_path_e31c9f89e83a91fd27e3a06b17dc39a1.bindTooltip(
+                `<div>
+                     Curved Path
+                 </div>`,
+                {"sticky": true}
+            );
+        
 </script>
 </html>
