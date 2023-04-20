@@ -1,19 +1,17 @@
 from flask import request, render_template, Flask
 import folium
 from folium.plugins import AntPath
-import pandas as pd
+
 from geopy.geocoders import Nominatim
 import sqlite3
 import numpy as np
 import datetime
 
-cities = pd.read_csv('airports.csv')
+
+
+locationMap = {}
 citiesMap = {}
 ReverseMap = {}
-locationMap = {}
-for i in range(1, len(cities)):
-    citiesMap[cities.iloc[i]["IATA"]] = cities.iloc[i]["CITY"]
-    ReverseMap[cities.iloc[i]["CITY"]] = cities.iloc[i]["IATA"]
 
 conn = sqlite3.connect('flights.db')
 c = conn.cursor()
@@ -23,38 +21,49 @@ c.execute(query)
 locs = c.fetchall()
 for loc in locs:
     locationMap[loc[0]] = (loc[1:4])
+    citiesMap[loc[0]] = loc[3]
+    ReverseMap[loc[3]] = loc[0]
 c.close()
 conn.close()
+
+# List of cities to display in the drop-down menu
+cities_list = list(citiesMap.values())
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    # List of cities to display in the drop-down menu
-    cities_list = list(citiesMap.values())
     # Render the HTML form with the list of cities
-    return render_template('index.html', cities=cities_list)
+    map = folium.Map(location=[37.0902, -95.7129], zoom_start=3.5)
+    hasMap = {}
+    map_html = map.get_root().render()
+    return render_template('map.html', map_html=map_html, hasMap=hasMap,hasMap2=hasMap, cities=cities_list)
 
 
-@app.route('/map', methods=['POST'])
+@app.route('/map', methods=['GET','POST'])
 def generate_map():
     # Get the selected cities from the form
     city1 = request.form['city1']
     city2 = request.form['city2']
 
+    prevCity1 = request.form.get('city1')
+    prevCity2 = request.form.get('city2')
+
     # execute the query
     conn = sqlite3.connect('flights.db')
     c = conn.cursor()
-    query = '''SELECT COUNT(*) FROM table2002 WHERE origin=? AND dest=?'''
+    query = '''SELECT UniqueCarrier,Cancelled, COUNT(*)
+                FROM table2002 WHERE Origin=? AND  Dest=?
+                GROUP BY UniqueCarrier, Cancelled
+            '''
     c.execute(query, (ReverseMap[city1], ReverseMap[city2]))
-    result = c.fetchone()[0]
+    result = c.fetchall()
+    data = {(t[0],t[1]) : t[2]  for t in result}
+    hasMap = {k[0]: v for k, v in data.items() if k[1] == 0}
+    hasMap2 = {k[0]: v for k, v in data.items() if k[1] == 1}
 
-    # Create map centered on the US
     map = folium.Map(location=[37.0902, -95.7129], zoom_start=4)
-
-    sTime = datetime.datetime.now()
-    points = None
     try:
         loc1 = locationMap[ReverseMap[city1]]
         loc2 = locationMap[ReverseMap[city2]]
@@ -77,34 +86,33 @@ def generate_map():
         marker1.add_to(map)
         marker2.add_to(map)
 
-    print(datetime.datetime.now()-sTime)
-    #Time Optimized using
+    #Time Optimized using try except
     # Draw a curved line between the two cities
-    AntPath(
-        locations=points,
-        dash_array=[50, 30],
-        delay=800,
-        weight=5,
-        color='#8E44AD',
-        pulse_color='#FFC300',
-        tooltip=f'{result}'
-    ).add_to(map)
-    #
-    # query = '''SELECT UniqueCarrier, COUNT(*) as num_flights
-    #   FROM table2002 WHERE Origin=? AND Dest=?
-    #   GROUP BY UniqueCarrier
-    #   ORDER BY num_flights DESC
-    #   LIMIT 11
-    # '''
-    # c.execute(query, (ReverseMap[city1], ReverseMap[city2]))
-    # result = c.fetchall()
-    # hasMap = {k: v for k, v in result}
-    # print(city1,city2,hasMap)
+    Total = sum(data.values())
+    print(Total,city1,city2,ReverseMap[city1],ReverseMap[city2])
+    if Total > 0:
+        AntPath(
+            locations=points,
+            dash_array=[50, 30],
+            delay=400,
+            weight=2,
+            color='#8E44AD',
+            pulse_color='#FFC300',
+            tooltip=f'{Total}'
+        ).add_to(map)
 
+    c.close()
     conn.close()
+    map_html = map.get_root().render()
 
-    map.save('./templates/map.html')
-    return render_template('map.html')
+    return render_template('map.html',
+                           map_html=map_html,
+                           hasMap=hasMap,
+                           hasMap2= hasMap2,
+                           cities=cities_list,
+                           prev_city1=prevCity1,
+                           prev_city2=prevCity2
+                           )
 
 
 if __name__ == '__main__':
