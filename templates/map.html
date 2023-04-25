@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/c3@0.7.20/c3.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
                 /* Set box-sizing property for all elements */
         * {
@@ -68,7 +69,7 @@
         {#}#}
 
          #piechart {
-            height: 300px;
+            height: 350px;
         }
 
         #barchart {
@@ -80,23 +81,29 @@
 <body>
 <div>
     <form action="/map" method="POST">
-        <label for="city1">Select City 1:</label>
+        <label for="city1">Select City :</label>
         <select name="city1" id="city1">
             {% for city in cities %}
             <option value="{{ city }}" {% if prev_city1 == city %}selected{% endif %}>{{ city }}</option>
             {% endfor %}
         </select>
 
-        <label for="city2">Select City 2:</label>
-        <select name="city2" id="city2">
-            {% for city in cities %}
-            <option value="{{ city }}" {% if prev_city2 == city %}selected{% endif %}>{{ city }}</option>
+        <label for="year">Select Year:</label>
+        <select name="year" id="year">
+            {% for year in years %}
+            <option value="{{ year }}" {% if prev_year == year %}selected{% endif %}>{{ year }}</option>
             {% endfor %}
         </select>
 
         <input type="submit" value="SUBMIT">
     </form>
 </div>
+
+<div style="text-align:center;">
+  <a href="/air?fromMap={{ 1 }}" class="btn btn-primary">Go to Airline Analysis</a>
+</div>
+
+
 <!-- Create a div for the map -->
 <div id="mapid">
     <!-- Add the generated map code here using jinja2 -->
@@ -106,13 +113,14 @@
 
 
 <!-- Add a div for the pie chart -->
+<!-- Add a div for the pie chart -->
 <div id="piechart">
 <script>
     // Define the data for the pie chart
     var data = {
         columns: [
             {% for carrier, count in hasMap.items() %}
-                ['{{ carrier }}', {{ count }}],
+                ['{{ fullname[carrier] }}', {{ count }}],
             {% endfor %}
         ],
         type: 'pie',
@@ -126,6 +134,7 @@
                     return d3.rgb(this.style.fill).darker(2);
                 })
                 .style('stroke', 'white');
+            chart.tooltip.show({name: fullname[d.name]});
         },
         onmouseout: function (d, i) {
             console.log("onmouseout", d, i);
@@ -136,14 +145,7 @@
                     return d3.rgb(this.style.fill).brighter(2);
                 })
                 .style('stroke', 'none');
-        }
-    };
-
-    var tooltip = {
-        format: {
-            value: function (value, ratio, id) {
-                return value ;
-            }
+            chart.tooltip.hide();
         }
     };
 
@@ -151,29 +153,55 @@
     var chart = c3.generate({
         bindto: '#piechart',
         data: data,
-        tooltip: tooltip
+        tooltip: {
+            format: {
+                value: function (value, ratio, id) {
+                    return value;
+                }
+            }
+        }
     });
 </script>
 </div>
 
 <!-- Add a div for the bar chart -->
+{% if data %}
 <div id="barchart">
-    <script>
-        // Define the data for the bar chart
-        var data = {
-            columns: [
-                ['Count', {% for carrier, count in hasMap.items() %}{{ count }}, {% endfor %}],
-                ['Total', {% for carrier, count in hasMap2.items() %}{{ count }}, {% endfor %}]
-            ],
-            type: 'bar'
-        };
+<script>
+    // Define the data for the bar chart
+    var labels = [];
+    var values = [];
 
-        // Configure the chart
-        var chart = c3.generate({
-            bindto: '#barchart',
-            data: data
-        });
-    </script>
+    {% for label, value in data %}
+        labels.push('{{ label }}');
+        values.push({{ value }});
+    {% endfor %}
+
+    var data = {
+        x: 'Count',
+        columns: [
+            ['Count'].concat(labels),
+            ['Distance (in Miles)'].concat(values)
+        ],
+        type: 'bar'
+    };
+
+    // Configure the chart
+    var chart = c3.generate({
+        bindto: '#barchart',
+        data: data,
+        axis: {
+            x: {
+                type: 'category'
+            }
+        }
+    });
+</script>
+</div>
+{% endif %}
+
+<div id="graph">
+    {{ scatterPlot|safe }}
 </div>
 </body>
 </html>

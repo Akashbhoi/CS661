@@ -1,72 +1,95 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Select Cities</title>
+  <head>
+    <meta charset="UTF-8">
+    <title>Airline Performance</title>
+    <!-- Import leaflet.js and leaflet.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/c3@0.7.20/c3.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #F5F5F5;
-        }
+      /* Set box-sizing property for all elements */
+      * {
+        box-sizing: border-box;
+      }
 
-        form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            margin: 0 auto;
-        }
+      /* Set margin and padding to 0 for body element */
+      body {
+        margin: 0;
+        padding: 0;
+      }
 
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+      /* Style form */
+      form {
+        display: flex;
+        justify-content: center;
+        min-height: 25px;
+        margin: 10px auto;
+      }
 
-        select {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #DDD;
-            border-radius: 3px;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-        }
+      label,
+      select,
+      input[type=submit] {
+        margin: 0 10px;
+        max-width: 175px;
+      }
 
-        input[type="submit"] {
-            display: block;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+      select,
+      input[type=submit] {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
 
-        input[type="submit"]:hover {
-            background-color: #3E8E41;
-        }
+      input[type=submit] {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      input[type=submit]:hover {
+        background-color: #3e8e41;
+      }
+
+      #piechart {
+        height: 350px;
+      }
+
     </style>
-</head>
-<body>
-    <form action="/map" method="POST">
-        <label for="city1">Select City 1:</label>
-        <select name="city1" id="city1">
-            {% for city in cities %}
-            <option value="{{ city }}">{{ city }}</option>
-            {% endfor %}
-        </select>
+  </head>
 
-        <label for="city2">Select City 2:</label>
-        <select name="city2" id="city2">
-            {% for city in cities %}
-            <option value="{{ city }}">{{ city }}</option>
-            {% endfor %}
-        </select>
+  <body>
 
+    <div>
+      <form action="/air1" method="POST">
+        <label for="year">Select Year:</label>
+        <select name="year" id="year">
+          {% for year in years %}
+          <option value="{{ year }}" {% if prev_year == year %}selected{% endif %}>{{ year }}</option>
+          {% endfor %}
+        </select>
         <input type="submit" value="SUBMIT">
-    </form>
-</body>
+      </form>
+    </div>
+
+    <div>
+      <form action="/air2" method="POST">
+        <label for="delay">Select Cause:</label>
+        <select name="delay" id="delay">
+          {% for cause in causes %}
+          <option value="{{ cause }}" {% if prev_cause == cause %}selected{% endif %}>{{ cause }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="SUBMIT">
+      </form>
+    </div>
+
+    <div>
+      {{ html_str|safe }}
+    </div>
+
+  </body>
 </html>

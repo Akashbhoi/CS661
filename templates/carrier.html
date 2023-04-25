@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Airline Performance</title>
+    <!-- Import leaflet.js and leaflet.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/c3@0.7.20/c3.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+                /* Set box-sizing property for all elements */
+        * {
+          box-sizing: border-box;
+        }
+
+        /* Set margin and padding to 0 for body element */
+        body {
+          margin: 0;
+          padding: 0;
+        }
+
+        /* Style form */
+        form {
+          display: flex;
+          justify-content: center;
+          min-height: 25px;
+          margin: 10px auto;
+        }
+
+        label,
+        select,
+        input[type=submit] {
+          margin: 0 10px;
+          max-width: 175px;
+        }
+
+        select,
+        input[type=submit] {
+          padding: 5px;
+          border: 1px solid #ccc;
+          border-radius: 3px;
+        }
+
+        input[type=submit] {
+          background-color: #4CAF50;
+          color: white;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        input[type=submit]:hover {
+          background-color: #3e8e41;
+        }
+    </style>
+</head>
+
+  <body>
+<div>
+  <form action="/carrier" method="POST" name="form1">
+    <label for="year">Select Year:</label>
+    <select name="year" id="year">
+      {% for year in years %}
+      <option value="{{ year }}" {% if prev_year == year %}selected{% endif %}>{{ year }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="cause">Select Cause:</label>
+    <select name="cause" id="cause">
+        {% for cause in causes %}
+            <option value="{{ cause }}" {% if prev_cause == casue %}selected{% endif %}>{{ cause }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" name="submit" value="SUBMIT">
+  </form>
+</div>
+
+<div>
+  {{ html_str|safe }}
+</div>
+<div style="text-align: center;">
+      <a href="/" class="btn btn-primary">BACK</a>
+  </div>
+  </body>
+</html>
